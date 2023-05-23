@@ -58,6 +58,10 @@ def _preprocess_data(data):
     # ---------------------------------------------------------------
 
     # ----------- Replace this code with your own preprocessing steps --------
+
+    median_valencia_pressure = feature_vector_df['valencia_pressure'].median()
+    feature_vector_df['valencia_pressure'] = feature_vector_df['valencia_pressure'].fillna(median_valencia_pressure)
+
     for col in feature_vector_df.columns:
         if feature_vector_df[col].dtype == object and col != "time":
             feature_vector_df[col]= feature_vector_df[col].str.extract(r'([0-9]+)')
@@ -74,7 +78,7 @@ def _preprocess_data(data):
 
     feature_vector_df = feature_vector_df.drop(['time'], axis=1)
 
-    predict_vector = feature_vector_df[['year',
+    predict_vector = feature_vector_df['year',
        'month', 'day', 'hour', 'minute', 'second'] + ['barcelona_pressure', 'barcelona_rain_1h', 'barcelona_rain_3h',
        'barcelona_temp', 'barcelona_temp_max', 'barcelona_temp_min',
        'barcelona_weather_id', 'barcelona_wind_deg', 'barcelona_wind_speed',
@@ -89,7 +93,7 @@ def _preprocess_data(data):
        'seville_temp_min', 'seville_weather_id', 'seville_wind_speed',
        'valencia_humidity', 'valencia_pressure', 'valencia_snow_3h',
        'valencia_temp', 'valencia_temp_max', 'valencia_temp_min',
-       'valencia_wind_deg', 'valencia_wind_speed']]
+       'valencia_wind_deg', 'valencia_wind_speed']
     # ------------------------------------------------------------------------
 
     return predict_vector
