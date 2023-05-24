@@ -70,10 +70,10 @@ def _preprocess_data(data):
     valencia_pressure_median = feature_vector_df['valencia_pressure'].median()
     feature_vector_df['valencia_pressure'] = feature_vector_df['valencia_pressure'].fillna(valencia_pressure_median)
     # 6. Converting categorical features to a numeric format
-    for col in feature_vector_df.columns:
-        if feature_vector_df[col].dtype == object and col != "time":
-            feature_vector_df[col] = feature_vector_df[col].str.extract(r'([0-9]+)')
-            feature_vector_df[col] = pd.to_numeric(feature_vector_df[col])
+    feature_vector_df['valencia_wind_deg']= feature_vector_df['valencia_wind_deg'].str.extract('(\d+)')
+    feature_vector_df['valencia_wind_deg'] = pd.to_numeric(feature_vector_df['valencia_wind_deg'])
+    feature_vector_df['seville_pressure']= feature_vector_df['seville_pressure'].str.extract('(\d+)')
+    feature_vector_df['seville_pressure'] = pd.to_numeric(feature_vector_df['seville_pressure'])
     # 7. Changing time colum from string type to datetime object and then to a delta time feature
     feature_vector_df['time'] = pd.to_datetime(feature_vector_df['time'])
     feature_vector_df['time_delta_hours'] = (feature_vector_df['time'] - feature_vector_df['time'].min()).dt.components['hours']
@@ -103,7 +103,7 @@ def _preprocess_data(data):
        'valencia_temp', 'valencia_temp_max', 'valencia_temp_min',
        'valencia_wind_deg', 'valencia_wind_speed']]
     # 10. Dropping the target variable to create the predict vector
-    predict_vector = feature_vector_df.astype('float64')
+    predict_vector = feature_vector_df
     # ------------------------------------------------------------------------
 
     return predict_vector
