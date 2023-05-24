@@ -58,7 +58,7 @@ def _preprocess_data(data):
     # ---------------------------------------------------------------
 
     # ----------- Replace this code with your own preprocessing steps --------
-      # 0. Dropping the "Unnamed: 0" column 
+    # 1. Dropping the "Unnamed: 0" column 
     feature_vector_df = feature_vector_df.drop("Unnamed: 0", axis =1)
     # 2. Order the columns in alphabetical order
     feature_vector_df = feature_vector_df.reindex(sorted(feature_vector_df.columns), axis=1)
@@ -74,18 +74,18 @@ def _preprocess_data(data):
         if feature_vector_df[col].dtype == object and col != "time":
             feature_vector_df[col] = feature_vector_df[col].str.extract(r'([0-9]+)')
             feature_vector_df[col] = pd.to_numeric(feature_vector_df[col])
-    # 8. Changing time colum from string type to datetime object and then to a delta time feature
+    # 7. Changing time colum from string type to datetime object and then to a delta time feature
     feature_vector_df['time'] = pd.to_datetime(feature_vector_df['time'])
     feature_vector_df['time_delta_hours'] = (feature_vector_df['time'] - feature_vector_df['time'].min()).dt.components['hours']
     feature_vector_dict = feature_vector_df.drop("time", axis=1)
-    # 9. Splitting the time column
+    # 8. Splitting the time column
     feature_vector_df['year'] = feature_vector_df['time'].dt.year
     feature_vector_df['month'] = feature_vector_df['time'].dt.month
     feature_vector_df['day'] = feature_vector_df['time'].dt.day
     feature_vector_df['hour'] = feature_vector_df['time'].dt.hour
     feature_vector_df['minute'] = feature_vector_df['time'].dt.minute
     feature_vector_df['second'] = feature_vector_df['time'].dt.second
-    # 10. Reordering the columns to place time features first
+    # 9. Reordering the columns to place time features first
     feature_vector_df = feature_vector_df[['year', 'month', 'day','hour', 'minute', 'second'] + 
         ['barcelona_pressure', 'barcelona_rain_1h', 'barcelona_rain_3h',
         'barcelona_temp', 'barcelona_temp_max', 'barcelona_temp_min',
@@ -102,8 +102,8 @@ def _preprocess_data(data):
        'valencia_humidity', 'valencia_pressure', 'valencia_snow_3h',
        'valencia_temp', 'valencia_temp_max', 'valencia_temp_min',
        'valencia_wind_deg', 'valencia_wind_speed']]
-    # 12. Dropping the target variable to create the predict vector
-    predict_vector = feature_vector_df
+    # 10. Dropping the target variable to create the predict vector
+    predict_vector = feature_vector_df.astype('float64')
     # ------------------------------------------------------------------------
 
     return predict_vector
