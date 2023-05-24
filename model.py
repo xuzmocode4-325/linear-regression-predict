@@ -58,7 +58,6 @@ def _preprocess_data(data):
     # ---------------------------------------------------------------
 
     # ----------- Replace this code with your own preprocessing steps --------
-   # engineer existing features for test dataset
     # 0. Dropping the "Unnamed: 0" column 
     feature_vector_df = feature_vector_df.drop("Unnamed: 0", axis =1)
     # 1. Isolating the target variable
