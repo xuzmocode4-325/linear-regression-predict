@@ -105,7 +105,7 @@ def _preprocess_data(data):
        'valencia_temp', 'valencia_temp_max', 'valencia_temp_min',
        'valencia_wind_deg', 'valencia_wind_speed','load_shortfall_3h']]
     # 11. Isolating feature columns 
-    feature_cols = [col for col in feature_vector_df.columns != target_variable]
+    feature_cols = [col for col in feature_vector_df.columns != 'load_shortfall_3h']
     # 12. Dropping the target variable to create the predict vector
     predict_vector = feature_vector_df[feature_cols]
     # ------------------------------------------------------------------------
