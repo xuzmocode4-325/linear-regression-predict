@@ -59,6 +59,8 @@ def _preprocess_data(data):
 
     # ----------- Replace this code with your own preprocessing steps --------
    # engineer existing features for test dataset
+    # 0. Dropping the "Unnamed: 0" column 
+    feature_vector_df = feature_vector_df.drop("Unnamed: 0", axis =1)
     # 1. Isolating the target variable
     target_variable = 'load_shortfall_3h'
     # 2. Order the columns in alphabetical order
@@ -75,49 +77,38 @@ def _preprocess_data(data):
         if feature_vector_df[col].dtype == object and col != "time":
             feature_vector_df[col] = feature_vector_df[col].str.extract(r'([0-9]+)')
             feature_vector_df[col] = pd.to_numeric(feature_vector_df[col])
-    # 7. removing columns
-    cols_to_remove = []
-    for col in feature_vector_df.columns:
-        if "rain" in col or "snow" in col:
-            cols_to_remove.append(col)
-        if "temp" in col and "min" not in col:
-            cols_to_remove.append(col)
-        if "clouds" in col:
-            cols_to_remove.append(col)
-        if "weather" in col:
-            cols_to_remove.append(col)
-        if "deg" in col:
-            cols_to_remove.append(col)
-        if "humidity" in col:
-            cols_to_remove.append(col)
-    # 8. selecting features to keep
-    keep_cols = []
-    for col in feature_vector_df.columns:
-        if col not in cols_to_remove:
-            keep_cols.append(col)
-    feature_vector_df = feature_vector_df[keep_cols]
-    # 9. changing time colum from string type to datetime object and then to a delta time feature
+    # 8. changing time colum from string type to datetime object and then to a delta time feature
     feature_vector_df['time'] = pd.to_datetime(feature_vector_df['time'])
     feature_vector_df['time_delta_hours'] = (feature_vector_df['time'] - feature_vector_df['time'].min()).dt.components['hours']
     feature_vector_dict = feature_vector_df.drop("time", axis=1)
-    # 10. reordering the columns to place delta time first
-    feature_vector_df = feature_vector_df[['time_delta_hours'] + [col for col in feature_vector_df.columns if col != 'time_delta_hours']]
+    # 9. Splitting the time column
+    feature_vector_df['year'] = feature_vector_df['time'].dt.year
+    feature_vector_df['month'] = feature_vector_df['time'].dt.month
+    feature_vector_df['day'] = feature_vector_df['time'].dt.day
+    feature_vector_df['hour'] = feature_vector_df['time'].dt.hour
+    feature_vector_df['minute'] = feature_vector_df['time'].dt.minute
+    feature_vector_df['second'] = feature_vector_df['time'].dt.second
+    # 10. reordering the columns to place time features first
+    feature_vector_df = [['year', 'month', 'day','hour', 'minute', 'second'] + 
+        ['barcelona_pressure', 'barcelona_rain_1h', 'barcelona_rain_3h',
+        'barcelona_temp', 'barcelona_temp_max', 'barcelona_temp_min',
+       'barcelona_weather_id', 'barcelona_wind_deg', 'barcelona_wind_speed',
+       'bilbao_clouds_all', 'bilbao_pressure', 'bilbao_rain_1h',
+       'bilbao_snow_3h', 'bilbao_temp', 'bilbao_temp_max', 'bilbao_temp_min',
+       'bilbao_weather_id', 'bilbao_wind_deg', 'bilbao_wind_speed',
+       'madrid_clouds_all', 'madrid_humidity', 'madrid_pressure',
+       'madrid_rain_1h', 'madrid_temp', 'madrid_temp_max', 'madrid_temp_min',
+       'madrid_weather_id', 'madrid_wind_speed', 'seville_clouds_all',
+       'seville_humidity', 'seville_pressure', 'seville_rain_1h',
+       'seville_rain_3h', 'seville_temp', 'seville_temp_max',
+       'seville_temp_min', 'seville_weather_id', 'seville_wind_speed',
+       'valencia_humidity', 'valencia_pressure', 'valencia_snow_3h',
+       'valencia_temp', 'valencia_temp_max', 'valencia_temp_min',
+       'valencia_wind_deg', 'valencia_wind_speed','load_shortfall_3h']]
     # 11. isolating feature columns 
-    features_cols = [col for col in feature_vector_df.columns != target_variable]
-    # 12. scaling features to prepare for the model
-    from sklearn.preprocessing import MinMaxScaler
-        # Create a MinMaxScaler object
-    scaler = MinMaxScaler()
-        # Fit the scaler to the data
-    y = feature_vector_df[target_variable]
-    X = feature_vector_df[features_cols]
-    scaler.fit(feature_vector_df[features_cols])
-    # Transform the data
-    scaled_data = scaler.transform(feature_vector_df[features_cols])
-    # Update the dataframe with the scaled data
-    feature_vector_df[features_cols] = scaled_data
-    # Display the scaled data
-    predict_vector = feature_vector_df.drop(target_variable, axis=1)
+    feature_cols = [col for col in feature_vector_df.columns != target_variable]
+    # 12
+    predict_vector = feature_vector_df[feature_cols]
     # ------------------------------------------------------------------------
 
     return predict_vector
