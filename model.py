@@ -72,12 +72,12 @@ def _preprocess_data(data):
     # 5. Replacing null values in 'valencia_pressure' with the feature median value
     valencia_pressure_median = feature_vector_df['valencia_pressure'].median()
     feature_vector_df['valencia_pressure'] = feature_vector_df['valencia_pressure'].fillna(valencia_pressure_median)
-    # 6. converting categorical features to a numeric format
+    # 6. Converting categorical features to a numeric format
     for col in feature_vector_df.columns:
         if feature_vector_df[col].dtype == object and col != "time":
             feature_vector_df[col] = feature_vector_df[col].str.extract(r'([0-9]+)')
             feature_vector_df[col] = pd.to_numeric(feature_vector_df[col])
-    # 8. changing time colum from string type to datetime object and then to a delta time feature
+    # 8. Changing time colum from string type to datetime object and then to a delta time feature
     feature_vector_df['time'] = pd.to_datetime(feature_vector_df['time'])
     feature_vector_df['time_delta_hours'] = (feature_vector_df['time'] - feature_vector_df['time'].min()).dt.components['hours']
     feature_vector_dict = feature_vector_df.drop("time", axis=1)
@@ -88,7 +88,7 @@ def _preprocess_data(data):
     feature_vector_df['hour'] = feature_vector_df['time'].dt.hour
     feature_vector_df['minute'] = feature_vector_df['time'].dt.minute
     feature_vector_df['second'] = feature_vector_df['time'].dt.second
-    # 10. reordering the columns to place time features first
+    # 10. Reordering the columns to place time features first
     feature_vector_df = [['year', 'month', 'day','hour', 'minute', 'second'] + 
         ['barcelona_pressure', 'barcelona_rain_1h', 'barcelona_rain_3h',
         'barcelona_temp', 'barcelona_temp_max', 'barcelona_temp_min',
@@ -105,9 +105,9 @@ def _preprocess_data(data):
        'valencia_humidity', 'valencia_pressure', 'valencia_snow_3h',
        'valencia_temp', 'valencia_temp_max', 'valencia_temp_min',
        'valencia_wind_deg', 'valencia_wind_speed','load_shortfall_3h']]
-    # 11. isolating feature columns 
+    # 11. Isolating feature columns 
     feature_cols = [col for col in feature_vector_df.columns != target_variable]
-    # 12
+    # 12. Dropping the target variable to create the predict vector
     predict_vector = feature_vector_df[feature_cols]
     # ------------------------------------------------------------------------
 
