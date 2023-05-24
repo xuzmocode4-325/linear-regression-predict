@@ -58,28 +58,39 @@ def _preprocess_data(data):
     # ---------------------------------------------------------------
 
     # ----------- Replace this code with your own preprocessing steps --------
-    median_valencia_pressure = feature_vector_df['valencia_pressure'].median()
-    feature_vector_df['valencia_pressure'] = feature_vector_df['valencia_pressure'].fillna(median_valencia_pressure)
-
+    # 0. Dropping the "Unnamed: 0" column 
+    feature_vector_df = feature_vector_df.drop("Unnamed: 0", axis =1)
+    # 1. Isolating the target variable
+    target_variable = 'load_shortfall_3h'
+    # 2. Order the columns in alphabetical order
+    feature_vector_df = feature_vector_df.reindex(sorted(feature_vector_df.columns), axis=1)
+    # 3. Keep the "time" column in the first index position
+    feature_vector_df = feature_vector_df[['time'] + [col for col in feature_vector_df.columns if col != 'time']]
+    # 4. Convert all column titles to lowercase
+    feature_vector_df.columns = feature_vector_df.columns.str.lower()
+    # 5. Replacing null values in 'valencia_pressure' with the feature median value
+    valencia_pressure_median = feature_vector_df['valencia_pressure'].median()
+    feature_vector_df['valencia_pressure'] = feature_vector_df['valencia_pressure'].fillna(valencia_pressure_median)
+    # 6. Converting categorical features to a numeric format
     for col in feature_vector_df.columns:
         if feature_vector_df[col].dtype == object and col != "time":
-            feature_vector_df[col]= feature_vector_df[col].str.extract(r'([0-9]+)')
+            feature_vector_df[col] = feature_vector_df[col].str.extract(r'([0-9]+)')
             feature_vector_df[col] = pd.to_numeric(feature_vector_df[col])
-
+    # 8. Changing time colum from string type to datetime object and then to a delta time feature
     feature_vector_df['time'] = pd.to_datetime(feature_vector_df['time'])
-
+    feature_vector_df['time_delta_hours'] = (feature_vector_df['time'] - feature_vector_df['time'].min()).dt.components['hours']
+    feature_vector_dict = feature_vector_df.drop("time", axis=1)
+    # 9. Splitting the time column
     feature_vector_df['year'] = feature_vector_df['time'].dt.year
     feature_vector_df['month'] = feature_vector_df['time'].dt.month
     feature_vector_df['day'] = feature_vector_df['time'].dt.day
     feature_vector_df['hour'] = feature_vector_df['time'].dt.hour
     feature_vector_df['minute'] = feature_vector_df['time'].dt.minute
     feature_vector_df['second'] = feature_vector_df['time'].dt.second
-
-    feature_vector_df = feature_vector_df.drop(['time'], axis=1)
-
-    predict_vector = feature_vector_df['year',
-       'month', 'day', 'hour', 'minute', 'second'] + ['barcelona_pressure', 'barcelona_rain_1h', 'barcelona_rain_3h',
-       'barcelona_temp', 'barcelona_temp_max', 'barcelona_temp_min',
+    # 10. Reordering the columns to place time features first
+    feature_vector_df = [['year', 'month', 'day','hour', 'minute', 'second'] + 
+        ['barcelona_pressure', 'barcelona_rain_1h', 'barcelona_rain_3h',
+        'barcelona_temp', 'barcelona_temp_max', 'barcelona_temp_min',
        'barcelona_weather_id', 'barcelona_wind_deg', 'barcelona_wind_speed',
        'bilbao_clouds_all', 'bilbao_pressure', 'bilbao_rain_1h',
        'bilbao_snow_3h', 'bilbao_temp', 'bilbao_temp_max', 'bilbao_temp_min',
@@ -92,7 +103,11 @@ def _preprocess_data(data):
        'seville_temp_min', 'seville_weather_id', 'seville_wind_speed',
        'valencia_humidity', 'valencia_pressure', 'valencia_snow_3h',
        'valencia_temp', 'valencia_temp_max', 'valencia_temp_min',
-       'valencia_wind_deg', 'valencia_wind_speed']
+       'valencia_wind_deg', 'valencia_wind_speed','load_shortfall_3h']]
+    # 11. Isolating feature columns 
+    feature_cols = [col for col in feature_vector_df.columns != target_variable]
+    # 12. Dropping the target variable to create the predict vector
+    predict_vector = feature_vector_df[feature_cols]
     # ------------------------------------------------------------------------
 
     return predict_vector
