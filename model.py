@@ -76,8 +76,6 @@ def _preprocess_data(data):
     feature_vector_df['seville_pressure'] = pd.to_numeric(feature_vector_df['seville_pressure'])
     # 7. Changing time colum from string type to datetime object and then to a delta time feature
     feature_vector_df['time'] = pd.to_datetime(feature_vector_df['time'])
-    feature_vector_df['time_delta_hours'] = (feature_vector_df['time'] - feature_vector_df['time'].min()).dt.components['hours']
-    feature_vector_dict = feature_vector_df.drop("time", axis=1)
     # 8. Splitting the time column
     feature_vector_df['year'] = feature_vector_df['time'].dt.year
     feature_vector_df['month'] = feature_vector_df['time'].dt.month
