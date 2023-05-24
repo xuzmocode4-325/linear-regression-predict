@@ -88,7 +88,7 @@ def _preprocess_data(data):
     feature_vector_df['minute'] = feature_vector_df['time'].dt.minute
     feature_vector_df['second'] = feature_vector_df['time'].dt.second
     # 10. Reordering the columns to place time features first
-    feature_vector_df = [['year', 'month', 'day','hour', 'minute', 'second'] + 
+    feature_vector_df = feature_vector_df[['year', 'month', 'day','hour', 'minute', 'second'] + 
         ['barcelona_pressure', 'barcelona_rain_1h', 'barcelona_rain_3h',
         'barcelona_temp', 'barcelona_temp_max', 'barcelona_temp_min',
        'barcelona_weather_id', 'barcelona_wind_deg', 'barcelona_wind_speed',
