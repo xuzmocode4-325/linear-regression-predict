@@ -60,8 +60,6 @@ def _preprocess_data(data):
     # ----------- Replace this code with your own preprocessing steps --------
       # 0. Dropping the "Unnamed: 0" column 
     feature_vector_df = feature_vector_df.drop("Unnamed: 0", axis =1)
-    # 1. Isolating the target variable
-    target_variable = 'load_shortfall_3h'
     # 2. Order the columns in alphabetical order
     feature_vector_df = feature_vector_df.reindex(sorted(feature_vector_df.columns), axis=1)
     # 3. Keep the "time" column in the first index position
@@ -103,11 +101,9 @@ def _preprocess_data(data):
        'seville_temp_min', 'seville_weather_id', 'seville_wind_speed',
        'valencia_humidity', 'valencia_pressure', 'valencia_snow_3h',
        'valencia_temp', 'valencia_temp_max', 'valencia_temp_min',
-       'valencia_wind_deg', 'valencia_wind_speed','load_shortfall_3h']]
-    # 11. Isolating feature columns 
-    feature_cols = [col for col in feature_vector_df.columns != 'load_shortfall_3h']
+       'valencia_wind_deg', 'valencia_wind_speed']]
     # 12. Dropping the target variable to create the predict vector
-    predict_vector = feature_vector_df[feature_cols]
+    predict_vector = feature_vector_df
     # ------------------------------------------------------------------------
 
     return predict_vector
