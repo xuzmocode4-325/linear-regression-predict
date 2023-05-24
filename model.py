@@ -58,42 +58,7 @@ def _preprocess_data(data):
     # ---------------------------------------------------------------
 
     # ----------- Replace this code with your own preprocessing steps --------
-
-    median_valencia_pressure = feature_vector_df['valencia_pressure'].median()
-    feature_vector_df['valencia_pressure'] = feature_vector_df['valencia_pressure'].fillna(median_valencia_pressure)
-
-    for col in feature_vector_df.columns:
-        if feature_vector_df[col].dtype == object and col != "time":
-            feature_vector_df[col]= feature_vector_df[col].str.extract(r'([0-9]+)')
-            feature_vector_df[col] = pd.to_numeric(feature_vector_df[col])
-
-    feature_vector_df['time'] = pd.to_datetime(feature_vector_df['time'])
-
-    feature_vector_df['year'] = feature_vector_df['time'].dt.year
-    feature_vector_df['month'] = feature_vector_df['time'].dt.month
-    feature_vector_df['day'] = feature_vector_df['time'].dt.day
-    feature_vector_df['hour'] = feature_vector_df['time'].dt.hour
-    feature_vector_df['minute'] = feature_vector_df['time'].dt.minute
-    feature_vector_df['second'] = feature_vector_df['time'].dt.second
-
-    feature_vector_df = feature_vector_df.drop(['time'], axis=1)
-
-    predict_vector = feature_vector_df['year',
-       'month', 'day', 'hour', 'minute', 'second'] + ['barcelona_pressure', 'barcelona_rain_1h', 'barcelona_rain_3h',
-       'barcelona_temp', 'barcelona_temp_max', 'barcelona_temp_min',
-       'barcelona_weather_id', 'barcelona_wind_deg', 'barcelona_wind_speed',
-       'bilbao_clouds_all', 'bilbao_pressure', 'bilbao_rain_1h',
-       'bilbao_snow_3h', 'bilbao_temp', 'bilbao_temp_max', 'bilbao_temp_min',
-       'bilbao_weather_id', 'bilbao_wind_deg', 'bilbao_wind_speed',
-       'madrid_clouds_all', 'madrid_humidity', 'madrid_pressure',
-       'madrid_rain_1h', 'madrid_temp', 'madrid_temp_max', 'madrid_temp_min',
-       'madrid_weather_id', 'madrid_wind_speed', 'seville_clouds_all',
-       'seville_humidity', 'seville_pressure', 'seville_rain_1h',
-       'seville_rain_3h', 'seville_temp', 'seville_temp_max',
-       'seville_temp_min', 'seville_weather_id', 'seville_wind_speed',
-       'valencia_humidity', 'valencia_pressure', 'valencia_snow_3h',
-       'valencia_temp', 'valencia_temp_max', 'valencia_temp_min',
-       'valencia_wind_deg', 'valencia_wind_speed']
+    predict_vector = feature_vector_df[['Madrid_wind_speed','Bilbao_rain_1h','Valencia_wind_speed']]
     # ------------------------------------------------------------------------
 
     return predict_vector
