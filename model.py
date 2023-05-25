@@ -77,8 +77,8 @@ def _preprocess_data(data):
        'valencia_wind_deg', 'valencia_wind_speed']]
 
     # 2. Replacing null values in 'valencia_pressure' with the feature median value
-    valencia_pressure_median = feature_vector_df['valencia_pressure'].median()
-    feature_vector_df['valencia_pressure'] = feature_vector_df['valencia_pressure'].fillna(valencia_pressure_median)
+    #valencia_pressure_median = feature_vector_df['valencia_pressure'].median()
+    #feature_vector_df['valencia_pressure'] = feature_vector_df['valencia_pressure'].fillna(valencia_pressure_median)
     # 3. Converting categorical features to a numeric format
     feature_vector_df['valencia_wind_deg']= feature_vector_df['valencia_wind_deg'].str.extract('(\d+)')
     feature_vector_df['valencia_wind_deg'] = pd.to_numeric(feature_vector_df['valencia_wind_deg'])
