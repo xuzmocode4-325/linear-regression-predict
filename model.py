@@ -59,6 +59,7 @@ def _preprocess_data(data):
 
     # ----------- Replace this code with your own preprocessing steps --------
     # 1. Replacing null values in 'valencia_pressure' with the feature median value
+    feature_vector_df.columns = feature_vector_df.columns.str.lower()
     feature_vector_df =  feature_vector_df[['time', 'barcelona_pressure', 'barcelona_rain_1h', 'barcelona_rain_3h',
        'barcelona_temp', 'barcelona_temp_max', 'barcelona_temp_min',
        'barcelona_weather_id', 'barcelona_wind_deg', 'barcelona_wind_speed',
@@ -95,7 +96,7 @@ def _preprocess_data(data):
     # 6. Reordering the columns to place time features first
     feature_vector_df = feature_vector_df.drop(['time'], axis=1)
     # 7. Dropping the target variable to create the predict vector
-    predict_vector = feature_vector_df #.to_numpy(copy=True)
+    predict_vector = feature_vector_df.to_numpy(copy=True)
 
     # ------------------------------------------------------------------------
 
