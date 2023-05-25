@@ -145,4 +145,4 @@ def make_prediction(data, model):
     # Perform prediction with model and preprocessed data.
     prediction = model.predict(prep_data)
     # Format as list for output standardisation.
-    return [prediction]
+    return prediction[0].tolist()
