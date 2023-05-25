@@ -101,8 +101,6 @@ def _preprocess_data(data):
 
     return predict_vector
 
-print(_preprocess_data(data).columns)
-
 def load_model(path_to_model:str):
     """Adapter function to load our pretrained model into memory.
 
