@@ -96,7 +96,7 @@ def _preprocess_data(data):
     # 6. Reordering the columns to place time features first
     feature_vector_df = feature_vector_df.drop(['time'], axis=1)
     # 7. Dropping the target variable to create the predict vector
-    predict_vector = feature_vector_df.to_numpy(copy=True)
+    predict_vector = feature_vector_df #.to_numpy(copy=True)
 
     # ------------------------------------------------------------------------
 
