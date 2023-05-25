@@ -79,7 +79,6 @@ def _preprocess_data(data):
     # 2. Replacing null values in 'valencia_pressure' with the feature median value
     feature_vector_df['valencia_pressure'] = feature_vector_df['valencia_pressure'].fillna(1015.0)
     # 3. Converting categorical features to a numeric format
-    """"""
     feature_vector_df['valencia_wind_deg']= feature_vector_df['valencia_wind_deg'].str.extract('(\d+)')
     feature_vector_df['valencia_wind_deg'] = pd.to_numeric(feature_vector_df['valencia_wind_deg'])
     feature_vector_df['seville_pressure']= feature_vector_df['seville_pressure'].str.extract('(\d+)')
@@ -146,4 +145,4 @@ def make_prediction(data, model):
     # Perform prediction with model and preprocessed data.
     prediction = model.predict(prep_data)
     # Format as list for output standardisation.
-    return prediction[0].tolist()
+    return [prediction]
