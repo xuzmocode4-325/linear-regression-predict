@@ -59,7 +59,7 @@ def _preprocess_data(data):
 
     # ----------- Replace this code with your own preprocessing steps --------
     # 1. Replacing null values in 'valencia_pressure' with the feature median value
-    feature_vector_df = [['time', 'barcelona_pressure', 'barcelona_rain_1h', 'barcelona_rain_3h',
+    feature_vector_df =  feature_vector_df[['time', 'barcelona_pressure', 'barcelona_rain_1h', 'barcelona_rain_3h',
        'barcelona_temp', 'barcelona_temp_max', 'barcelona_temp_min',
        'barcelona_weather_id', 'barcelona_wind_deg', 'barcelona_wind_speed',
        'bilbao_clouds_all', 'bilbao_pressure', 'bilbao_rain_1h',
